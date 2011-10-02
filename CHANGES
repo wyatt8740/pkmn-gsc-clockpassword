@@ -9,3 +9,4 @@ Version 0.3, 2011-10-01
    contained a space, which is a valid character in the player-character name
    in the actual game)
  - Improved error handling
+ - Padding of ID number and password if less than 5 digits long
