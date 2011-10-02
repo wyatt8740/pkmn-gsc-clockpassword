@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Pokémon Gold/Silver Clock Reset Password Generator
-# Version 0.2
+# Version 0.3
 # Copyright 2011 woddfellow2 | http://wlair.us.to/
 # 
 # This program is free software: you can redistribute it and/or modify
@@ -17,25 +17,37 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # 
-# See http://is.gd/8YUs6I for more information.
-# 
 # TODO:
 # - Command-line options
-# - Zero-padding of numbers
 
 import sys;
 
-name = input("Enter name of player character (case-sensitive; use { for PK "
-             "and } for MN):\n> ");
+# Collect player character name, trainer ID number, and amount of held money,
+# also error handling:
+name = input("Enter name of player character (case-sensitive; use { for PK"
+             " and } for MN):\n> ");
 if len(name) > 7:
     print("ER001: Name must be only 7 characters long.", file=sys.stderr);
     exit();
-trainerid = int(input("Enter ID number:\n> "));
+if name == "":
+    print("ER005: Name must not be blank.", file=sys.stderr);
+    exit();
+try:
+    trainerid = int(input("Enter ID number:\n> "));
+except ValueError:
+    print("ER006: Trainer ID given was blank or not a number.",
+          file=sys.stderr);
+    exit();
 if 0 <= trainerid >= 65536:
     print("ER002: Trainer ID must be a 5-digit number from 00000 to 65536.",
           file=sys.stderr);
     exit();
-money = int(input("Enter amount of held money:\n> "));
+try:
+    money = int(input("Enter amount of held money:\n> "));
+except ValueError:
+    print("ER007: Amount of held money given was blank or not a number.",
+          file=sys.stderr);
+    exit();
 if 0 <= money >= 999999:
     print("ER003: Amount of money must be a 0- to 6-digit number.",
           file=sys.stderr);
@@ -54,7 +66,7 @@ name_chars = { "A": 128, "B": 129, "C": 130, "D": 131, "E": 132, "F": 133,
                "q": 176, "r": 177, "s": 178, "t": 179, "u": 180, "v": 181,
                "w": 182, "x": 183, "y": 184, "z": 185, "{": 225, "}": 226,
                "-": 227, "?": 230, "!": 231, ".": 232, "*": 241, "/": 243,
-               ",": 244 }
+               ",": 244, " ": 0 }
 
 for k, v in name_chars.items():
     if name[0] == k:
@@ -72,21 +84,26 @@ for k, v in name_chars.items():
         if name[4] == k:
             name_char5 = v;
 
-if len(name) == 1:
-    name_total = int(name_char1);
-if len(name) == 2:
-    name_total = int(name_char1) + int(name_char2);
-if len(name) == 3:
-    name_total = int(name_char1) + int(name_char2) + int(name_char3);
-if len(name) == 4:
-    name_total = int(name_char1) + int(name_char2) + int(name_char3) \
-    + int(name_char4);
-if len(name) >= 5:
-    name_total = int(name_char1) + int(name_char2) + int(name_char3) \
-    + int(name_char4) + int(name_char5);
-
-if len(name) < 5:
-    name_total = int(name_total) + 80;
+try:
+    if len(name) == 1:
+        name_total = int(name_char1);
+    if len(name) == 2:
+        name_total = int(name_char1) + int(name_char2);
+    if len(name) == 3:
+        name_total = int(name_char1) + int(name_char2) + int(name_char3);
+    if len(name) == 4:
+        name_total = int(name_char1) + int(name_char2) + int(name_char3) \
+        + int(name_char4);
+    if len(name) >= 5:
+        name_total = int(name_char1) + int(name_char2) + int(name_char3) \
+        + int(name_char4) + int(name_char5);
+    
+    if len(name) < 5:
+        name_total = int(name_total) + 80;
+except NameError:
+    print("ER004: Name given contains one or more invalid characters.",
+          file=sys.stderr);
+    exit();
 
 # Money
 money_byte1 = int(money) / 65536;
@@ -106,5 +123,5 @@ password = int(name_total) + int(money_total) + int(trainerid_total);
 
 # Output result
 print(); # Newline to make it look better
-print("%s/%d, %d units of currency" % (name, trainerid, money));
-print("Password:", int(password));
+print("%s/%s, %d units of currency" % (name, str(trainerid).zfill(5), money));
+print("Password:", str(int(password)).zfill(5));
