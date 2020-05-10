@@ -10,7 +10,8 @@ screen).
 
 Fork of the (now-dead) repository
 [https://git.github.com/woddfellow2/pkmn-gs-clockpassword.git](https://git.github.com/woddfellow2/pkmn-gs-clockpassword.git),
-which I recovered from my (jailbroken) iPhone 4S, of all places.
+which I recovered from my (jailbroken) iPhone 4S, of all places. It still
+contains all of the original repository's commit history.
 
 It includes a Python 2.7 backport of the code which was absent in the original
 author's repository.

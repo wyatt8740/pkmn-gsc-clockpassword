@@ -10,3 +10,7 @@ Version 0.3, 2011-10-01
    in the actual game)
  - Improved error handling
  - Padding of ID number and password if less than 5 digits long
+Version '0.3w', 2020-05-10
+ - Added a Python 2.7 backport, which I actually wrote in nano on an iPhone 4S
+   in 2015. Python 3 version remains unchanged.
+ - Improved documentation (README.md).
